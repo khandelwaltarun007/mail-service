@@ -1,6 +1,7 @@
 package com.ms.model;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class Message {
@@ -10,6 +11,8 @@ public class Message {
 	private String bcc;
 	private String subject;
 	private String text;
+	private int priority;
+	private MultipartFile[] attachments;
 
 	public String getTo() {
 		return to;
@@ -49,6 +52,22 @@ public class Message {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public MultipartFile[] getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(MultipartFile[] attachments) {
+		this.attachments = attachments;
 	}
 
 }

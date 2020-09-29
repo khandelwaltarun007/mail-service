@@ -1,12 +1,17 @@
 package com.ms.resource;
 
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms.model.Message;
 import com.ms.service.MailService;
 
@@ -18,10 +23,12 @@ public class MailResource {
 	@Autowired
 	private MailService mailService;
 	
-	@PostMapping("/service/mail")
-	public void sendMail(@RequestBody Message message) {
+	@PostMapping(value="/service/mail",produces = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	public void sendMail(@RequestPart String mailMessage,@RequestPart("attachments") MultipartFile[] attachments) throws IOException {
 		LOGGER.info("entry sendMail");
-		mailService.prepareMail(message.getTo(), message.getCc(), message.getBcc(), message.getSubject(), message.getText());
+		ObjectMapper mapper = new ObjectMapper();
+		Message message = mapper.readValue(mailMessage, Message.class);
+		mailService.prepareMail(message.getTo(), message.getCc(), message.getBcc(), message.getSubject(), message.getText(), message.getPriority(),attachments);
 		LOGGER.info("exit sendMail");
 	}
 	
